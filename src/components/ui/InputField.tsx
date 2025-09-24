@@ -49,9 +49,9 @@ export const InputField = forwardRef<HTMLInputElement | HTMLTextAreaElement, Inp
       }
     };
     const baseClasses = `
-      w-full px-4 py-3 pr-12 bg-input border border-input-border rounded-lg
+      w-full px-4 py-3 pr-12 bg-input rounded-lg
       text-text-primary placeholder-text-muted text-base
-      focus:outline-none focus:border-input-focus focus:ring-1 focus:ring-input-focus
+      focus:outline-none focus:border-input-focus focus:ring-0 focus:ring-input-focus
       transition-colors resize-none
       ${className}
     `;
