@@ -1,0 +1,28 @@
+{
+  "name": "Agro-Sevak",
+  "short_name": "Agro-Sevak",
+  "description": "AI-powered agricultural assistant helping farmers with crop diagnosis, weather forecasts, and farming advice",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a5f1a",
+  "theme_color": "#2d7c2d",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/128/10130/10130571.png",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/128/10130/10130571.png",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["agriculture", "education", "productivity"],
+  "lang": "en-IN",
+  "dir": "ltr"
+}
