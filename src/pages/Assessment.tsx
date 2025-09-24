@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button";
 import { Progress } from "../components/ui/progress";
 import { Card } from "../components/ui/card";
 import { Textarea } from "../components/ui/textarea";
+import { VoiceTextarea } from "../components/ui/VoiceTextarea";
 import { assessmentQuestions } from "../data/mockData";
 import { ArrowRight, CheckCircle, Circle, PencilSimple } from "@phosphor-icons/react";
 
@@ -33,6 +34,16 @@ export const Assessment = () => {
       ...prev,
       [currentQuestion.id]: text
     }));
+  };
+
+  const handleVoiceInput = (transcript: string) => {
+    if (transcript.trim()) {
+      handleTextAnswer(transcript);
+    }
+  };
+
+  const handleVoiceError = (error: string) => {
+    console.error("Voice input error:", error);
   };
 
   const handleNext = () => {
@@ -168,11 +179,14 @@ export const Assessment = () => {
                 <PencilSimple size={20} />
                 <span className="text-sm font-medium">Write your answer</span>
               </div>
-              <Textarea
+              <VoiceTextarea
                 value={textAnswer}
                 onChange={(e) => handleTextAnswer(e.target.value)}
+                onVoiceInput={handleVoiceInput}
+                onVoiceError={handleVoiceError}
                 placeholder="Share your thoughts here..."
                 className="min-h-[120px] text-base resize-none"
+                language="hi-IN"
               />
             </div>
           )}

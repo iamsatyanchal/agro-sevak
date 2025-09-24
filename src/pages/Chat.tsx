@@ -36,14 +36,28 @@ export const Chat = () => {
 
     // Simulate AI response
     setTimeout(() => {
-      const aiResponse: Message = {
+      const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "Thanks for your question! Based on your career interests, I'd recommend exploring our assessment to get personalized guidance. Would you like me to help you get started?",
+        content: "Thanks for your question! I'm here to help with career guidance. This is a sample response.",
         sender: "ai",
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, aiResponse]);
+      setMessages(prev => [...prev, aiMessage]);
     }, 1000);
+  };
+
+  const handleVoiceInput = (transcript: string) => {
+    if (transcript.trim()) {
+      setInputText(transcript);
+      // Auto-send after a brief delay
+      setTimeout(() => {
+        handleSendMessage();
+      }, 500);
+    }
+  };
+
+  const handleVoiceError = (error: string) => {
+    console.error("Voice input error:", error);
   };
 
   return (
@@ -93,7 +107,9 @@ export const Chat = () => {
                 value={inputText}
                 onChange={setInputText}
                 placeholder="Ask about your career..."
-                onVoiceInput={() => console.log("Voice input")}
+                onVoiceInput={handleVoiceInput}
+                onVoiceError={handleVoiceError}
+                language="auto"
               />
             </div>
             <button

@@ -59,6 +59,20 @@ export const Home = () => {
     }
   };
 
+  const handleVoiceInput = (transcript: string) => {
+    if (transcript.trim()) {
+      setQueryText(transcript);
+      // Auto-navigate after a brief delay
+      setTimeout(() => {
+        navigate(`/chat?query=${encodeURIComponent(transcript)}`);
+      }, 1000);
+    }
+  };
+
+  const handleVoiceError = (error: string) => {
+    console.error("Voice input error:", error);
+  };
+
   return (
     <MobileLayout currentPage="home">
       <div className="px-4 py-6 space-y-6">
@@ -76,7 +90,9 @@ export const Home = () => {
             value={queryText}
             onChange={setQueryText}
             placeholder="Tell about your farming problem..."
-            onVoiceInput={() => console.log("Voice input")}
+            onVoiceInput={handleVoiceInput}
+            onVoiceError={handleVoiceError}
+            language="hi-IN"
           />
           
           {queryText && (

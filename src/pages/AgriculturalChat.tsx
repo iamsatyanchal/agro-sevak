@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { MobileLayout } from "../components/layout/MobileLayout";
 import { InputField } from "../components/ui/InputField";
+import VoiceButton from "../components/ui/VoiceButton";
 import { 
   ArrowLeft, 
   Microphone, 
@@ -48,9 +49,19 @@ export const AgriculturalChat = () => {
     setInputText("");
   };
 
-  const handleVoiceInput = () => {
-    // Voice input functionality would be implemented here
-    console.log("Voice input activated");
+  const handleVoiceInput = (transcript: string) => {
+    if (transcript.trim()) {
+      // Auto-send after a brief delay to allow user to see the text
+      setTimeout(() => {
+        handleSendMessage(transcript);
+        setInputText("");
+      }, 500);
+    }
+  };
+
+  const handleVoiceError = (error: string) => {
+    console.error("Voice input error:", error);
+    // You could show a toast notification here
   };
 
   const handleImageUpload = () => {
@@ -141,35 +152,25 @@ export const AgriculturalChat = () => {
   <div className="flex items-center gap-3">
    
     <div className="relative flex-1">
-      <input
-        type="text"
+      <InputField
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        onChange={setInputText}
         placeholder="Type your message..."
-        className="w-full pl-4 pr-12 py-2 rounded-lg bg-surface-secondary text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+        onVoiceInput={handleVoiceInput}
+        onVoiceError={handleVoiceError}
+        onEnter={() => handleSendMessage()}
+        language="auto"
+        className="bg-surface-secondary text-sm "
       />
-      <button
-        onClick={handleSendMessage}
-        disabled={!inputText.trim() || isLoading}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-primary disabled:opacity-50"
-      >
-        <PaperPlaneRight weight="duotone" size={20} />
-      </button>
     </div>
 
-    <button
-      onClick={handleVoiceInput}
-      className="p-2 rounded-lg bg-surface-secondary text-text-secondary/80 hover:text-text-primary flex-shrink-0"
-    >
-      <Microphone weight="duotone" size={20} />
-    </button>
-     <button
+    {/* <button
       onClick={handleImageUpload}
-      className="p-2 rounded-lg bg-surface-secondary text-text-secondary/90 hover:text-text-primary flex-shrink-0"
+      
+      className="bg-primary text-primary-foreground hover:bg-primary-hover p-2 rounded-lg bg-surface-secondary text-text-secondary/90 hover:text-text-primary flex-shrink-0"
     >
       <Camera weight="duotone" size={20} />
-    </button>
+    </button> */}
 
   </div>
 </div>

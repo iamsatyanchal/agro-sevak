@@ -68,7 +68,7 @@ const stateNameMap: Record<string, string> = {
 export const getUserLocationFromIP = async (): Promise<UserLocation | null> => {
   try {
     // Using ip-api.com which is free and doesn't require API key
-    const response = await fetch('http://ip-api.com/json/?fields=status,country,countryCode,region,regionName,city,lat,lon,timezone,isp,org,as,query');
+    const response = await fetch('https://api-point-ip-details.vercel.app/');
     
     if (!response.ok) {
       throw new Error('Failed to fetch location data');
