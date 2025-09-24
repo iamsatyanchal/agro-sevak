@@ -61,7 +61,7 @@ export const Weather = () => {
       <div className="p-4 space-y-6">
         {/* Header with Location */}
         <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="flex items-center justify-center gap-2">
             <MapPin weight="duotone" size={20} className="text-text-secondary" />
             <h1 className="text-xl font-semibold text-text-primary">
               {formatLocation(weather)}
@@ -94,13 +94,31 @@ export const Weather = () => {
       <img
         src={current.condition.icon.startsWith('//') ? 'https:' + current.condition.icon : current.condition.icon}
         alt={current.condition.text}
-        className="w-14 h-14 mb-1 rounded-lg shadow-sm"
+        className="w-14 h-14 rounded-lg"
       />
       <p className="text-text-secondary text-sm font-medium capitalize">
         {current.condition.text}
       </p>
     </div>
   </div>
+
+  {/* High & Low Forecast */}
+  
+    <div className="flex justify-between text-text-secondary text-sm border-t border-card-border pt-3">
+      <div className="flex items-center gap-1">
+        <ArrowFatUp  weight="fill" size={16} className="text-green-500" />
+        <span>
+          High: <span className="font-semibold">{current.feelslike_c}°C</span>
+        </span>
+      </div>
+      <div className="flex items-center gap-1">
+        <ArrowFatDown weight="fill" size={16} className="text-red-500" />
+        <span>
+          Low: <span className="font-semibold">{current.temp_c-1.5}°C</span>
+        </span>
+      </div>
+    </div>
+
 </div>
 
         {/* Weather Details Grid */}
