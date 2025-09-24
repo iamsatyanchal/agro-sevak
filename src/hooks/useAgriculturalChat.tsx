@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import GroqAgriculturalService, { WeatherData } from '../lib/groqApi';
+import { useLocationWeather } from './useLocationWeather';
 
 export interface ChatMessage {
   id: string;
   text: string;
   isUser: boolean;
   timestamp: Date;
+  isStreaming?: boolean;
 }
 
 export interface AIResponse {
@@ -16,47 +19,17 @@ export interface AIResponse {
   timestamp: string;
 }
 
-// Simple AI responses for agricultural queries
-const getAIResponse = (query: string): string => {
-  const lowerQuery = query.toLowerCase();
-  
-  if (lowerQuery.includes('pest') || lowerQuery.includes('insect') || lowerQuery.includes('bug')) {
-    return "For pest management, I recommend integrated pest management (IPM) practices. First, identify the specific pest affecting your crop. Common solutions include neem oil spray, beneficial insects, or targeted pesticides as a last resort. Would you like specific advice for a particular pest?";
-  }
-  
-  if (lowerQuery.includes('fertilizer') || lowerQuery.includes('nutrient')) {
-    return "For optimal fertilizer application, conduct a soil test first. Generally, NPK fertilizers work well for most crops. Organic options like compost and vermicompost are excellent for soil health. Apply fertilizers based on your crop's growth stage and soil requirements.";
-  }
-  
-  if (lowerQuery.includes('disease') || lowerQuery.includes('fungus') || lowerQuery.includes('infection')) {
-    return "Plant diseases often require quick action. Remove affected plant parts immediately and dispose properly. Copper-based fungicides or neem oil can help with fungal infections. Ensure proper spacing for air circulation and avoid overhead watering. What symptoms are you observing?";
-  }
-  
-  if (lowerQuery.includes('irrigation') || lowerQuery.includes('water')) {
-    return "Proper irrigation is crucial for crop health. Water early morning or evening to reduce evaporation. Check soil moisture before watering - insert your finger 2-3 inches deep. Most crops need 1-1.5 inches of water weekly, including rainfall. Consider drip irrigation for water efficiency.";
-  }
-  
-  if (lowerQuery.includes('soil') || lowerQuery.includes('organic')) {
-    return "Healthy soil is the foundation of good farming. Test soil pH regularly (6.0-7.0 is ideal for most crops). Add organic matter like compost to improve soil structure. Practice crop rotation to maintain soil fertility and reduce disease. Cover crops can also help during off-seasons.";
-  }
-  
-  if (lowerQuery.includes('weather') || lowerQuery.includes('rain') || lowerQuery.includes('temperature')) {
-    return "Weather planning is essential for farming success. Monitor local weather forecasts daily. Protect crops from extreme weather using shade nets or row covers. Adjust irrigation based on rainfall. Plan planting and harvesting around weather patterns.";
-  }
-  
-  return "Thank you for your agricultural question! For the best advice, please provide more specific details about your crop, location, and the issue you're facing. I can help with pest management, fertilization, irrigation, soil health, and general farming practices.";
-};
-
 export const useAgriculturalChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
-      text: "Hello! I'm your AI agricultural assistant. I can help you with farming questions, pest management, fertilization, irrigation, and more. What would you like to know?",
+      text: "Hello! I'm your AI agricultural assistant powered by advanced AI. I can help you with farming questions, pest management, fertilization, irrigation, weather-based advice, and more. What would you like to know?",
       isUser: false,
       timestamp: new Date()
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const { weather } = useLocationWeather();
 
   const sendMessage = async (text: string) => {
     const userMessage: ChatMessage = {
@@ -69,25 +42,119 @@ export const useAgriculturalChat = () => {
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Simulate AI processing delay
-    setTimeout(() => {
-      const aiResponse: ChatMessage = {
+    try {
+      // Prepare weather data for Groq API
+      const weatherData: WeatherData | undefined = weather ? {
+        temperature: weather.current?.temp_c,
+        humidity: weather.current?.humidity,
+        condition: weather.current?.condition?.text,
+        location: `${weather.location?.name}, ${weather.location?.country}`,
+        windSpeed: weather.current?.wind_kph,
+        pressure: weather.current?.pressure_mb
+      } : undefined;
+
+      // Create placeholder AI message for streaming
+      const aiMessageId = (Date.now() + 1).toString();
+      const placeholderAiMessage: ChatMessage = {
+        id: aiMessageId,
+        text: "",
+        isUser: false,
+        timestamp: new Date(),
+        isStreaming: true
+      };
+
+      setMessages(prev => [...prev, placeholderAiMessage]);
+
+      // Use streaming response for better UX
+      await GroqAgriculturalService.generateStreamingResponse(
+        text,
+        weatherData,
+        (chunk: string) => {
+          setMessages(prev => prev.map(msg => 
+            msg.id === aiMessageId 
+              ? { ...msg, text: msg.text + chunk }
+              : msg
+          ));
+        }
+      );
+
+      // Mark streaming as complete
+      setMessages(prev => prev.map(msg => 
+        msg.id === aiMessageId 
+          ? { ...msg, isStreaming: false }
+          : msg
+      ));
+
+    } catch (error) {
+      console.error('Error in agricultural chat:', error);
+      
+      const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
-        text: getAIResponse(text),
+        text: "I apologize, but I'm experiencing some technical difficulties. Please try again in a moment. In the meantime, I can still provide basic agricultural guidance on topics like crop management, pest control, irrigation, and soil health.",
         isUser: false,
         timestamp: new Date()
       };
 
-      setMessages(prev => [...prev, aiResponse]);
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000 + Math.random() * 1000); // 1-2 second delay
+    }
+  };
+
+  const sendMessageWithoutStreaming = async (text: string) => {
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      text,
+      isUser: true,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+
+    try {
+      // Prepare weather data for Groq API
+      const weatherData: WeatherData | undefined = weather ? {
+        temperature: weather.current?.temp_c,
+        humidity: weather.current?.humidity,
+        condition: weather.current?.condition?.text,
+        location: `${weather.location?.name}, ${weather.location?.country}`,
+        windSpeed: weather.current?.wind_kph,
+        pressure: weather.current?.pressure_mb
+      } : undefined;
+
+      const response = await GroqAgriculturalService.generateResponse(text, weatherData);
+
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        text: response,
+        isUser: false,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, aiMessage]);
+
+    } catch (error) {
+      console.error('Error in agricultural chat:', error);
+      
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        text: "I apologize, but I'm experiencing some technical difficulties. Please try again in a moment.",
+        isUser: false,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const clearChat = () => {
     setMessages([
       {
         id: '1',
-        text: "Hello! I'm your AI agricultural assistant. How can I help you today?",
+        text: "Hello! I'm your AI agricultural assistant powered by advanced AI. How can I help you today?",
         isUser: false,
         timestamp: new Date()
       }
@@ -98,6 +165,8 @@ export const useAgriculturalChat = () => {
     messages,
     isLoading,
     sendMessage,
-    clearChat
+    sendMessageWithoutStreaming,
+    clearChat,
+    weather: weather // Expose weather data if needed
   };
 };

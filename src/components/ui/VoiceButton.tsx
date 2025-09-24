@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Microphone, MicrophoneSlash, Stop, Waveform } from '@phosphor-icons/react';
 import useSpeechRecognition from '@/hooks/useSpeechRecognition';
 import { cn } from '@/lib/utils';
+import { getBrowserInfo } from '@/lib/speechRecognitionUtils';
 
 interface VoiceButtonProps {
   onTranscript: (text: string) => void;
@@ -24,6 +25,8 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
   size = 'md',
   variant = 'default'
 }) => {
+  const isMobile = getBrowserInfo().isMobile;
+
   // Smart language detection based on user's locale and preferences
   const getSmartLanguage = () => {
     if (language === 'auto') {
@@ -80,8 +83,8 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
     resetTranscript
   } = useSpeechRecognition({
     language: getSmartLanguage(),
-    continuous: true,
-    interimResults: true,
+    continuous: !isMobile, // Mobile works better with non-continuous
+    interimResults: !isMobile, // Mobile works better without interim results
     onResult: (text, isFinal) => {
       if (text.trim()) {
         if (isFinal) {
@@ -89,8 +92,10 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
           onTranscript(text.trim());
           resetTranscript();
         } else {
-          // Interim result - show in input field for real-time feedback
-          onInterimResult?.(text.trim());
+          // Interim result - show in input field for real-time feedback (desktop only)
+          if (!isMobile) {
+            onInterimResult?.(text.trim());
+          }
         }
       }
     },
@@ -101,7 +106,10 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
 
   const handleVoiceToggle = async () => {
     if (!isSupported) {
-      onError?.('Voice input not supported in this browser');
+      const errorMsg = isMobile 
+        ? 'Voice input not supported. Please use Chrome or Edge browser.'
+        : 'Voice input not supported in this browser';
+      onError?.(errorMsg);
       return;
     }
 
@@ -163,7 +171,7 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
           disabled && "opacity-50 cursor-not-allowed",
           className
         )}
-        title={isListening ? "Stop recording" : "Start voice input"}
+        title={isListening ? (isMobile ? "Tap to stop" : "Stop recording") : (isMobile ? "Tap to speak" : "Start voice input")}
       >
         {isListening ? (
           <Waveform weight="duotone" size={iconSizes[size]} />

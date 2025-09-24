@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Microphone, MicrophoneSlash, Waveform } from '@phosphor-icons/react';
+import { Microphone, MicrophoneSlash, Waveform, Info } from '@phosphor-icons/react';
 import useSpeechRecognition from '@/hooks/useSpeechRecognition';
 import { Button } from './button';
 import { cn } from '@/lib/utils';
+import { getBrowserInfo, checkSpeechSupport } from '@/lib/speechRecognitionUtils';
 
 interface VoiceInputProps {
   onTranscript: (text: string) => void;
@@ -22,6 +23,9 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
   disabled = false
 }) => {
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [showMobileHelp, setShowMobileHelp] = useState(false);
+  const browser = getBrowserInfo();
+  const speechSupport = checkSpeechSupport();
 
   const {
     transcript,
@@ -34,19 +38,22 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
     changeLanguage
   } = useSpeechRecognition({
     language,
-    continuous: true,
-    interimResults: true,
+    continuous: !browser.isMobile, // Mobile devices work better with non-continuous
+    interimResults: !browser.isMobile, // Mobile devices work better without interim results
     onResult: (text, isFinal) => {
       if (isFinal && text.trim()) {
         onTranscript(text.trim());
         resetTranscript();
-        stopListening();
+        if (!browser.isMobile) {
+          stopListening();
+        }
         setHasInteracted(false);
       }
     },
     onError: (errorMsg) => {
       onError?.(errorMsg);
       setHasInteracted(false);
+      setShowMobileHelp(browser.isMobile); // Show mobile help on error
     }
   });
 
@@ -56,7 +63,11 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
 
   const handleVoiceToggle = async () => {
     if (!isSupported) {
-      onError?.('Speech recognition is not supported in this browser');
+      const errorMsg = browser.isMobile 
+        ? 'Voice input not supported. Please use Chrome or Edge browser.'
+        : 'Speech recognition is not supported in this browser';
+      onError?.(errorMsg);
+      setShowMobileHelp(browser.isMobile);
       return;
     }
 
@@ -67,15 +78,33 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
       setHasInteracted(false);
     } else {
       setHasInteracted(true);
+      setShowMobileHelp(false);
       await startListening();
     }
   };
 
   if (!isSupported) {
     return (
-      <div className={cn("flex items-center gap-2 text-muted-foreground text-sm", className)}>
-        <MicrophoneSlash size={16} />
-        <span>Voice input not supported</span>
+      <div className={cn("flex flex-col gap-2", className)}>
+        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <MicrophoneSlash size={16} />
+          <span>{browser.isMobile ? 'Voice input not supported on this browser' : 'Voice input not supported'}</span>
+        </div>
+        {browser.isMobile && (
+          <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+            <div className="flex gap-2">
+              <Info size={16} className="text-orange-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-orange-700">
+                <p className="font-medium mb-1">Voice input requires a compatible browser</p>
+                <div className="space-y-1">
+                  {speechSupport.recommendations.map((rec, index) => (
+                    <p key={index} className="text-xs">• {rec}</p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -102,7 +131,7 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
         ) : (
           <>
             <Microphone size={16} />
-            <span>Voice Input</span>
+            <span>{browser.isMobile ? 'Tap to Speak' : 'Voice Input'}</span>
           </>
         )}
       </Button>
@@ -137,8 +166,30 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
       {/* Help Text */}
       {!isListening && !hasInteracted && !transcript && (
         <p className="text-xs text-muted-foreground">
-          Click the microphone to start voice input. Supports Hindi and English.
+          {browser.isMobile 
+            ? 'Tap microphone to speak. Supports Hindi and English.'
+            : 'Click the microphone to start voice input. Supports Hindi and English.'
+          }
         </p>
+      )}
+
+      {/* Mobile-specific help */}
+      {showMobileHelp && browser.isMobile && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex gap-2">
+            <Info size={16} className="text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-blue-700">
+              <p className="font-medium mb-1">Mobile Voice Input Tips</p>
+              <ul className="list-disc list-inside space-y-1 text-xs">
+                <li>Make sure you're using Chrome or Edge browser</li>
+                <li>Allow microphone permission when prompted</li>
+                <li>Speak clearly and close to your device</li>
+                <li>Tap "Tap to Speak" and start speaking immediately</li>
+                <li>Try refreshing the page if it still doesn't work</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

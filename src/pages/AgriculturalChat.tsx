@@ -122,6 +122,9 @@ export const AgriculturalChat = () => {
                 }`}>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
                     {message.text}
+                    {message.isStreaming && (
+                      <span className="inline-block w-2 h-4 bg-text-secondary animate-pulse ml-1">|</span>
+                    )}
                   </div>
                 </div>
                 {/* <div className="flex items-center gap-1 mt-1 text-xs text-text-secondary">
