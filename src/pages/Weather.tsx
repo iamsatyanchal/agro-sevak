@@ -84,7 +84,7 @@ export const Weather = () => {
         Feels like <span className="font-medium">{current.feelslike_c}°C</span>
       </p>
       <p className="text-text-secondary text-sm">
-        Last Updated:<span className="font-medium">{current.last_updated}</span>
+        Last Updated:<span className="font-medium">{current.last_updated.replace(/^.*?\s+/, '')}</span>
       
       </p>
     </div>
