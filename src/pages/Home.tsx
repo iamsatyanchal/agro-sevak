@@ -93,6 +93,7 @@ export const Home = () => {
             onVoiceInput={handleVoiceInput}
             onVoiceError={handleVoiceError}
             language="hi-IN"
+            className="border border-input-border focus:ring-1"
           />
           
           {queryText && (
