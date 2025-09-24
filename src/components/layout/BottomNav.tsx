@@ -56,7 +56,7 @@ export const BottomNav = ({ currentPage }: BottomNavProps) => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm bg-surface/95 backdrop-blur-md border-t border-border shadow-lg">
+    <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-surface/95 backdrop-blur-md border-t border-border shadow-lg">
       <div className="flex items-center justify-around px-1 py-0.5 safe-area-pb">
         {navItems.map((item) => {
           const isActive = currentPage === item.id;
