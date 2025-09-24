@@ -64,6 +64,9 @@ export const useAgriculturalChat = () => {
       };
 
       setMessages(prev => [...prev, placeholderAiMessage]);
+      
+      // Set loading to false as soon as streaming starts
+      setIsLoading(false);
 
       // Use streaming response for better UX
       await GroqAgriculturalService.generateStreamingResponse(
@@ -96,9 +99,9 @@ export const useAgriculturalChat = () => {
       };
 
       setMessages(prev => [...prev, errorMessage]);
-    } finally {
       setIsLoading(false);
     }
+    // Remove finally block since we handle setIsLoading(false) above when streaming starts
   };
 
   const sendMessageWithoutStreaming = async (text: string) => {
