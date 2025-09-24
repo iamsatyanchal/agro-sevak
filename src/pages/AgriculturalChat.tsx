@@ -164,7 +164,7 @@ export const AgriculturalChat = () => {
         onVoiceError={handleVoiceError}
         onEnter={() => handleSendMessage()}
         language="auto"
-        className="bg-surface-secondary text-sm "
+        className="bg-surface-secondary text-sm"
       />
     </div>
 
