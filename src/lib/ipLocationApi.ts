@@ -106,5 +106,7 @@ export const getUserLocationFromIP = async (): Promise<UserLocation | null> => {
 
 export const getStateForMarketAPI = async (): Promise<string> => {
   const location = await getUserLocationFromIP();
-  return location?.state || 'Bihar';
+  //return location?.state || 'Bihar';
+  return 'Bihar';
+
 };
