@@ -169,7 +169,7 @@ export const Settings = () => {
         {/* App Info Footer */}
         <div className="mt-8 p-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <img src="/favicon.ico" alt="App Icon" className="w-8 h-8" />
+            {/* <img src="/favicon.ico" alt="App Icon" className="w-8 h-8" /> */}
             <span className="font-semibold text-text-primary">Agro-Sevak</span>
           </div>
           <p className="text-text-secondary text-sm">
