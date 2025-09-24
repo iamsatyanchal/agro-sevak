@@ -32,7 +32,7 @@ export const MobileLayout = ({ children, currentPage, pageTitle }: MobileLayoutP
   const showHeader = currentPage !== "home";
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-sm mx-auto border-x border-border shadow-lg">
+    <div className="min-h-screen bg-background flex flex-col mx-auto border-x border-border shadow-lg">
       {showHeader && <SimpleHeader title={getPageTitle()} />}
       
       <main className="flex-1 overflow-y-auto pb-20">
