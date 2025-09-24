@@ -45,8 +45,9 @@ export const AgriculturalChat = () => {
   const handleSendMessage = async (text: string = inputText) => {
     if (!text.trim()) return;
     
-    await sendMessage(text);
+    // Clear input field immediately when user sends message
     setInputText("");
+    await sendMessage(text);
   };
 
   const handleVoiceInput = (transcript: string) => {
