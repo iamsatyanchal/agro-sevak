@@ -1,73 +1,193 @@
-# Welcome to your Lovable project
+# Agro-Sevak 🌾
 
-## Project info
+An intelligent agricultural assistance application that provides farmers with AI-powered advice, weather information, crop diagnosis, and market price insights. Built with modern web technologies to deliver a seamless mobile-first experience.
 
-**URL**: https://lovable.dev/projects/34fd05f2-8240-4105-9cca-9bcce8a3110f
+## Features 🚀
 
-## How can I edit this code?
+### 🤖 AI-Powered Agricultural Chat
+- Intelligent farming advice using Groq AI API
+- Weather-aware recommendations
+- Voice input and output support
+- Context-aware conversations about crops, diseases, and farming practices
 
-There are several ways of editing your application.
+### 🌦️ Weather Integration
+- Real-time location-based weather data
+- Weather forecasts for agricultural planning
+- Automatic location detection with IP-based fallback
 
-**Use Lovable**
+### 🔍 Crop Diagnosis
+- AI-powered crop disease identification
+- Treatment recommendations
+- Preventive measures suggestions
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/34fd05f2-8240-4105-9cca-9bcce8a3110f) and start prompting.
+### 📊 Market Prices
+- Real-time crop market prices
+- Price trends and analytics
+- Support for various crops and commodities
 
-Changes made via Lovable will be committed automatically to this repo.
+### 📱 Mobile-First Design
+- Progressive Web App (PWA) capabilities
+- Responsive design for all devices
+- Offline functionality
+- Clean, intuitive interface
 
-**Use your preferred IDE**
+## Tech Stack 🛠️
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Frontend
+- **React 18** - Modern React with hooks and functional components
+- **TypeScript** - Type-safe development
+- **Vite** - Fast build tool and development server
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Beautiful and accessible UI components
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### AI & APIs
+- **Groq SDK** - Fast AI inference for agricultural advice
+- **Speech Recognition API** - Voice input capabilities
+- **Geolocation API** - Location-based weather data
+- **Weather API** - Real-time weather information
 
-Follow these steps:
+### State Management & Routing
+- **React Router** - Client-side routing
+- **TanStack Query** - Server state management
+- **React Context** - Theme and global state management
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Additional Features
+- **PWA Support** - Installable web app with service worker
+- **IndexedDB** - Local data storage
+- **Workbox** - PWA utilities and caching strategies
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Getting Started 🏁
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Prerequisites
+- Node.js 16+ or Bun
+- npm, yarn, or bun package manager
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <YOUR_GIT_URL>
+   cd krishi-sahayak
+   ```
+
+2. **Install dependencies**
+   ```bash
+   # Using npm
+   npm install
+   
+   # Using bun (recommended)
+   bun install
+   ```
+
+3. **Set up Groq AI API** (Required for AI features)
+   - Visit [Groq Console](https://console.groq.com)
+   - Create an account and get your API key
+   - See `GROQ_SETUP.md` for detailed setup instructions
+
+4. **Start development server**
+   ```bash
+   # Using npm
+   npm run dev
+   
+   # Using bun
+   bun run dev
+   ```
+
+5. **Open in browser**
+   Navigate to `http://localhost:5173`
+
+## Project Structure 📁
+
+```
+src/
+├── components/
+│   ├── layout/          # Layout components (headers, navigation)
+│   └── ui/              # Reusable UI components
+├── contexts/            # React contexts (theme, etc.)
+├── data/                # Mock data and constants
+├── hooks/               # Custom React hooks
+├── lib/                 # Utility functions and API clients
+├── pages/               # Page components (routes)
+└── types/               # TypeScript type definitions
 ```
 
-**Edit a file directly in GitHub**
+## Available Scripts 📝
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+# Development
+npm run dev          # Start dev server
+npm run build        # Production build
+npm run build:dev    # Development build
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
+```
 
-**Use GitHub Codespaces**
+## Key Features Documentation 📖
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Agricultural Chat
+The AI chat system provides intelligent responses about:
+- Crop cultivation techniques
+- Disease identification and treatment
+- Soil management
+- Seasonal farming advice
+- Weather-based recommendations
 
-## What technologies are used for this project?
+### Weather Integration
+- Automatic location detection
+- IP-based location fallback
+- 7-day weather forecasts
+- Agricultural weather alerts
 
-This project is built with:
+### Market Prices
+- Real-time commodity prices
+- Historical price trends
+- Regional market data
+- Price comparison tools
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Environment Variables 🔐
 
-## How can I deploy this project?
+Create a `.env.local` file for local development:
 
-Simply open [Lovable](https://lovable.dev/projects/34fd05f2-8240-4105-9cca-9bcce8a3110f) and click on Share -> Publish.
+```env
+VITE_GROQ_API_KEY=your_groq_api_key_here
+VITE_WEATHER_API_KEY=your_weather_api_key_here
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Deployment 🚀
 
-Yes, you can!
+### Build for Production
+```bash
+npm run build
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+The `dist` folder contains the production-ready files.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### Deployment Options
+- **Vercel** (Recommended)
+- **Netlify**
+- **GitHub Pages**
+- **Railway**
+- **Any static hosting service**
+
+## Contributing 🤝
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License 📄
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support 💬
+
+For support and questions:
+- Create an issue in the GitHub repository
+- Check the documentation in the `/docs` folder
+- Review the `GROQ_SETUP.md` for AI configuration help
+
+---
+
+**Made with ❤️ for farmers and agricultural communities**
