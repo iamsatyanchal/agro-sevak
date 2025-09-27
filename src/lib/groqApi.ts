@@ -2,7 +2,7 @@ import { Groq } from 'groq-sdk';
 
 // Initialize Groq client
 const groq = new Groq({
-  apiKey: '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', // Make sure to add this to your .env file
+  apiKey: '...', // Make sure to add this to your .env file
   dangerouslyAllowBrowser: true // Enable client-side usage
 });
 
@@ -262,5 +262,6 @@ Please consider these weather conditions when providing your agricultural advice
     }
   }
 }
+
 
 export default GroqAgriculturalService.getInstance();
