@@ -2,7 +2,7 @@ import { Groq } from 'groq-sdk';
 
 // Initialize Groq client
 const groq = new Groq({
-  apiKey: '...', // Make sure to add this to your .env file
+  apiKey: import.meta.env.VITE_GROQ_API_KEY;, // Make sure to add this to your .env file
   dangerouslyAllowBrowser: true // Enable client-side usage
 });
 
@@ -265,3 +265,4 @@ Please consider these weather conditions when providing your agricultural advice
 
 
 export default GroqAgriculturalService.getInstance();
+
