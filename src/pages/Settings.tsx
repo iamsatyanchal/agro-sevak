@@ -24,34 +24,34 @@ export const Settings = () => {
   const [language, setLanguage] = useState("English");
 
   const settingsSections = [
-    {
-      title: "Account",
-      icon: User,
-      items: [
-        { label: "Profile", action: () => {}, hasArrow: true },
-        { label: "Personal Information", action: () => {}, hasArrow: true },
-        { label: "Change Password", action: () => {}, hasArrow: true },
-      ]
-    },
-    {
-      title: "Notifications",
-      icon: Bell,
-      items: [
-        { 
-          label: "Push Notifications", 
-          toggle: true, 
-          value: notifications,
-          onChange: setNotifications
-        },
-        { 
-          label: "Weather Alerts", 
-          toggle: true, 
-          value: weatherAlerts,
-          onChange: setWeatherAlerts
-        },
-        { label: "Notification Settings", action: () => {}, hasArrow: true },
-      ]
-    },
+    // {
+    //   title: "Account",
+    //   icon: User,
+    //   items: [
+    //     { label: "Profile", action: () => {}, hasArrow: true },
+    //     { label: "Personal Information", action: () => {}, hasArrow: true },
+    //     { label: "Change Password", action: () => {}, hasArrow: true },
+    //   ]
+    // },
+    // {
+    //   title: "Notifications",
+    //   icon: Bell,
+    //   items: [
+    //     { 
+    //       label: "Push Notifications", 
+    //       toggle: true, 
+    //       value: notifications,
+    //       onChange: setNotifications
+    //     },
+    //     { 
+    //       label: "Weather Alerts", 
+    //       toggle: true, 
+    //       value: weatherAlerts,
+    //       onChange: setWeatherAlerts
+    //     },
+    //     { label: "Notification Settings", action: () => {}, hasArrow: true },
+    //   ]
+    // },
     // {
     //   title: "Appearance",
     //   icon: Palette,
@@ -69,38 +69,56 @@ export const Settings = () => {
       title: "Location & Weather",
       icon: MapPin,
       items: [
-        { label: "Location Settings", action: () => {}, hasArrow: true, value: location },
-        { label: "Weather Units", action: () => {}, hasArrow: true, value: "Celsius" },
-        { label: "Auto-refresh Weather", action: () => {}, hasArrow: true },
+        { label: "Location Settings", action: () => {}, hasArrow: false, value: location },
+        { label: "Weather Units", action: () => {}, hasArrow: false, value: "Celsius" },
+        { label: "Auto-refresh Weather", action: () => {}, hasArrow: false, value: "Every 30 mins" },
       ]
     },
     {
       title: "Language & Region",
       icon: Globe,
       items: [
-        { label: "Language", action: () => {}, hasArrow: true, value: language },
-        { label: "Region", action: () => {}, hasArrow: true, value: "India" },
-        { label: "Date Format", action: () => {}, hasArrow: true, value: "DD/MM/YYYY" },
+        { label: "Language", action: () => {}, hasArrow: false, value: language },
+        { label: "Region", action: () => {}, hasArrow: false, value: "India" },
+        { label: "Date Format", action: () => {}, hasArrow: false, value: "DD/MM/YYYY" },
       ]
     },
-    {
-      title: "Privacy & Security",
-      icon: Shield,
-      items: [
-        { label: "Privacy Policy", action: () => {}, hasArrow: true },
-        { label: "Terms of Service", action: () => {}, hasArrow: true },
-        { label: "Data Management", action: () => {}, hasArrow: true },
-        { label: "Clear Cache", action: () => {}, hasArrow: true },
-      ]
-    },
+    // {
+    //   title: "Privacy & Security",
+    //   icon: Shield,
+    //   items: [
+    //     { label: "Privacy Policy", action: () => {}, hasArrow: true },
+    //     { label: "Terms of Service", action: () => {}, hasArrow: true },
+    //     { label: "Data Management", action: () => {}, hasArrow: true },
+    //     { label: "Clear Cache", action: () => {}, hasArrow: true },
+    //   ]
+    // },
     {
       title: "About",
       icon: Info,
       items: [
         { label: "App Version", action: () => {}, value: "1.0.0" },
-        { label: "Help & Support", action: () => {}, hasArrow: true },
-        { label: "Feedback", action: () => {}, hasArrow: true },
-        { label: "Rate App", action: () => {}, hasArrow: true },
+        { 
+          label: "Help & Support", 
+          action: () => {
+            window.location.href = "mailto:iamstyanchal@gmail.com?subject=Help & Support - Agro-Sevak App&body=Hi Team,%0D%0A%0D%0AI need help with the Agro-Sevak app.%0D%0A%0D%0APlease describe your issue:%0D%0A";
+          }, 
+          hasArrow: true 
+        },
+        { 
+          label: "Feedback", 
+          action: () => {
+            window.location.href = "mailto:iamstyanchal@gmail.com?subject=Feedback - Agro-Sevak App&body=Hi Team,%0D%0A%0D%0AI would like to share my feedback about the Agro-Sevak app.%0D%0A%0D%0AFeedback:%0D%0A";
+          }, 
+          hasArrow: true 
+        },
+        { 
+          label: "Rate App", 
+          action: () => {
+            window.location.href = "mailto:iamstyanchal@gmail.com?subject=App Rating - Agro-Sevak&body=Hi Team,%0D%0A%0D%0AI would like to rate the Agro-Sevak app.%0D%0A%0D%0ARating: ⭐⭐⭐⭐⭐ (Please rate out of 5 stars)%0D%0A%0D%0AComments:%0D%0A";
+          }, 
+          hasArrow: true 
+        },
       ]
     }
   ];
@@ -176,7 +194,7 @@ export const Settings = () => {
             AI-powered agricultural assistant for farmers
           </p>
           <p className="text-text-secondary text-xs mt-2">
-            Version 1 • Made with ❤️ for farmers by Team 4O4
+            Version 1 • Made with ❤️ for farmers by SATYA
           </p>
         </div>
       </div>
