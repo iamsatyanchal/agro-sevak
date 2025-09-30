@@ -66,6 +66,57 @@ export interface WeatherApiResponse {
   };
 }
 
+// IP-based location API response interface
+interface IPLocationResponse {
+  status: string;
+  continent: string;
+  continentCode: string;
+  country: string;
+  countryCode: string;
+  region: string;
+  regionName: string;
+  city: string;
+  district: string;
+  zip: string;
+  lat: number;
+  lon: number;
+  timezone: string;
+  offset: number;
+  currency: string;
+  isp: string;
+  org: string;
+  as: string;
+  asname: string;
+  reverse: string;
+  mobile: boolean;
+  proxy: boolean;
+  hosting: boolean;
+  query: string;
+}
+
+// Get user location using IP-based geolocation API
+export const getUserLocationFromIP = async (): Promise<GeolocationCoords> => {
+  try {
+    const response = await fetch('https://api-point-ip-details.vercel.app');
+    if (!response.ok) {
+      throw new Error('Failed to fetch IP-based location');
+    }
+    
+    const data: IPLocationResponse = await response.json();
+    
+    if (data.status !== 'success') {
+      throw new Error('IP location API returned error status');
+    }
+    
+    return {
+      lat: data.lat,
+      lon: data.lon,
+    };
+  } catch (error) {
+    throw new Error(`IP-based location failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
+
 // Get user location using browser's geolocation API
 export const getUserLocation = (): Promise<GeolocationCoords> => {
   return new Promise((resolve, reject) => {
@@ -124,12 +175,24 @@ export const getWeatherFromCoords = async (coords: GeolocationCoords): Promise<W
   }
 };
 
-// Get both location and weather data using geolocation
+// Get both location and weather data using geolocation with IP fallback
 export const getLocationAndWeather = async () => {
   try {
-    const coords = await getUserLocation();
+    let coords: GeolocationCoords;
+    
+    try {
+      // First, try to get location using GPS
+      coords = await getUserLocation();
+      console.log('Location obtained via GPS');
+    } catch (gpsError) {
+      console.log('GPS location failed, trying IP-based location:', gpsError);
+      // If GPS fails, fallback to IP-based location
+      coords = await getUserLocationFromIP();
+      console.log('Location obtained via IP');
+    }
+
     if (!coords) {
-      throw new Error('Could not get location data');
+      throw new Error('Could not get location data from any source');
     }
 
     const weatherData = await getWeatherFromCoords(coords);
